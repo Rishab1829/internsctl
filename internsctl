@@ -1,0 +1,62 @@
+#! /bin/bash
+
+command_name=internsctl
+version=v0.1.0
+
+var=$1
+
+case $var in
+    "--version" )
+        echo "$version" ;;
+    "cpu" )
+        if [ "$2" = "getinfo" ]
+        then
+            echo "$(lscpu)" 
+        fi ;; 
+    "memory" )
+        if [ "$2" = "getinfo" ]
+        then
+            echo $(free) 
+        fi ;;
+    "user" )
+        if [[ "$2" = "create" && "$#" = 3 ]]
+        then
+            echo "$(sudo useradd -d /home/$3 $3)"
+
+        elif [ "$2" = "list" ]
+        then
+            echo "$(cat /etc/passwd)"
+        elif [[ "$2" = "list" && "$3" = "--sudo-only" ]]
+        then
+            echo "$(cat /etc/sudoers)" 
+        fi ;;
+        "file" )
+            if [ "$2" = "getinfo" ]
+            then
+                if [[ "$#" = 3 && -e $3 ]]
+                then
+                    echo "File:      $3"
+                    echo "Access:    $(ls -l $3 | awk '{print $1}')"
+                    echo "Size(B):   $(ls -l $3 | awk '{print $5}')"
+                    echo "Owner:      $(ls -l $3 | awk '{print $3}')"
+                else
+                    echo "File not found"
+                fi
+            elif [ "$#" = 4 ]
+            then
+                if [ "$3" = "-s"]
+                then
+                    echo "Size(B):   $(ls -l $4 | awk '{print $5}')"
+                elif [ "$3"= "-p" ]
+                then
+                    echo "Access:    $(ls -l $4 | awk '{print $1}')"
+                elif [ "$3"= "-o" ]
+                then
+                   echo "Owner:      $(ls -l $4 | awk '{print $3}')"
+                elif [ "$3" = "-m" ] 
+                then
+                    echo "Last modified:      $(ls -l $4 | awk '{print $6}')"
+                fi
+            fi ;;
+           
+esac
