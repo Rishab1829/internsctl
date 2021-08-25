@@ -39,24 +39,27 @@ case $var in
                     echo "Access:    $(ls -l $3 | awk '{print $1}')"
                     echo "Size(B):   $(ls -l $3 | awk '{print $5}')"
                     echo "Owner:      $(ls -l $3 | awk '{print $3}')"
+                
+                elif [ "$#" = 4 ]
+                then
+                    if [ "$3" = "-s"]
+                    then
+                        echo "Size(B):   $(ls -l $4 | awk '{print $5}')"
+                    elif [ "$3"= "-p" ]
+                    then
+                        echo "Access:    $(ls -l $4 | awk '{print $1}')"
+                    elif [ "$3"= "-o" ]
+                    then
+                        echo "Owner:      $(ls -l $4 | awk '{print $3}')"
+                    elif [ "$3" = "-m" ] 
+                    then
+                        echo "Last modified:      $(ls -l $4 | awk '{print $6}')"
+                    fi
                 else
                     echo "File not found"
                 fi
-            elif [ "$#" = 4 ]
-            then
-                if [ "$3" = "-s"]
-                then
-                    echo "Size(B):   $(ls -l $4 | awk '{print $5}')"
-                elif [ "$3"= "-p" ]
-                then
-                    echo "Access:    $(ls -l $4 | awk '{print $1}')"
-                elif [ "$3"= "-o" ]
-                then
-                   echo "Owner:      $(ls -l $4 | awk '{print $3}')"
-                elif [ "$3" = "-m" ] 
-                then
-                    echo "Last modified:      $(ls -l $4 | awk '{print $6}')"
-                fi
             fi ;;
+        * )
+        echo "$0 : COMMAND NOT FOUND" ;;        
            
 esac
